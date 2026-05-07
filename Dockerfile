@@ -1,6 +1,6 @@
 FROM python:3.12-slim
 
-WORKDIR /app
+WORKDIR /opt/secure-ci-lab/app
 
 COPY app/requirements.txt .
 
