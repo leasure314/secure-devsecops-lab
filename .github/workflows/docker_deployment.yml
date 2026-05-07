@@ -1,0 +1,11 @@
+    - name: Deploy
+      uses: appleboy/ssh-action@master
+      with:
+        host: ${{ secrets.VM_HOST }}
+        username: ${{ secrets.VM_USER }}
+        key: ${{ secrets.SSH_KEY }}
+        script: |
+          cd /opt/secure-ci-lab
+          git pull
+          docker compose down
+          docker compose up -d --build
