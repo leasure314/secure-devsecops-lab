@@ -1,11 +1,31 @@
-    - name: Deploy
-      uses: appleboy/ssh-action@master
-      with:
-        host: ${{ secrets.VM_HOST }}
-        username: ${{ secrets.VM_USER }}
-        key: ${{ secrets.SSH_KEY }}
-        script: |
-          cd /opt/secure-ci-lab
-          git pull
-          docker compose down
-          docker compose up -d --build
+- name: Deploy to VM
+  uses: appleboy/ssh-action@v1.0.3
+  with:
+    host: ${{ secrets.VM_HOST }}
+    username: ${{ secrets.VM_USER }}
+    key: ${{ secrets.SSH_KEY }}
+    script: |
+      set -e
+
+      APP_DIR="/opt/secure-ci-lab"
+
+      echo "Moving to application directory..."
+      cd $APP_DIR
+
+      echo "Fetching latest changes..."
+      git fetch origin
+
+      echo "Resetting to latest main branch..."
+      git reset --hard origin/main
+
+      echo "Pulling latest images/building containers..."
+      docker compose pull || true
+      docker compose build --no-cache
+
+      echo "Restarting containers..."
+      docker compose up -d
+
+      echo "Cleaning unused Docker resources..."
+      docker image prune -f
+
+      echo "Deployment completed successfully."
