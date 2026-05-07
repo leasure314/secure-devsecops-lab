@@ -1,0 +1,29 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>DevSecOps Dashboard</title>
+</head>
+<body>
+    <h1>Secure DevSecOps Dashboard</h1>
+
+    <p>Last Updated: {{ timestamp }}</p>
+
+    <h2>Vulnerability Findings</h2>
+
+    <table border="1">
+        <tr>
+            <th>Severity</th>
+            <th>Package</th>
+            <th>CVE</th>
+        </tr>
+
+        {% for result in scan_results %}
+        <tr>
+            <td>{{ result.severity }}</td>
+            <td>{{ result.package }}</td>
+            <td>{{ result.cve }}</td>
+        </tr>
+        {% endfor %}
+    </table>
+</body>
+</html>
